@@ -5,8 +5,21 @@ import win32clipboard
 import json
 import webbrowser
 import tkinter as tk
+import os
+import sys
+import keyboard
 
 #hTttps://customtkinter.tomschimAnsky.com/documentation/
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def IFF(): # Skickar iväg namnet för ID
     win32clipboard.OpenClipboard()
@@ -50,6 +63,9 @@ customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-b
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 
+# Add global keyboard hotkey to do IFF
+keyboard.add_hotkey('ctrl+shift+z', IFF, args=())
+
 try: # Läser in tidigare postion på sidan
     with open('ToC_window_size.json') as f:
         window_size = json.load(f)
@@ -57,7 +73,7 @@ try: # Läser in tidigare postion på sidan
 except:
     app.geometry("200x100")
 app.title("ToC")
-app.iconbitmap("ToC_logo.ico")
+app.iconbitmap(resource_path("ToC_logo.ico"))
 
 app.wm_attributes("-topmost", 1) # Ovanpå allt
 # Use CTkButton instead of tkinter Button
